@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Aureo",
+      "hasCanvas": false,
+      "bodyTextLen": 3195,
+      "bodyTextHash": "dbb68167f9d2d8c14b501521284e8a8168eb502750cb707dfad861183bb3ba27",
+      "bodyTextPrefix": "Aureo studio CV Przykład Puste PDF QR Profil Imię i nazwisko Sta",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Aureo",
+      "hasCanvas": false,
+      "bodyTextLen": 2484,
+      "bodyTextHash": "f4a61a97472cdc0e6d492199ed511091e3c8101642f7de9d177e25fc5755dba5",
+      "bodyTextPrefix": "Aureo PDF QR Podgląd Edycja Skills Web automation toolset cypres",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-preview.json"
+}

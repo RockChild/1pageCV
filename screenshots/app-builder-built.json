@@ -1,0 +1,41 @@
+{
+  "url": "http://127.0.0.1:8081/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Aureo",
+      "hasCanvas": false,
+      "bodyTextLen": 3203,
+      "bodyTextHash": "79c3608ae749c4275879ee63ee3ddcda40739223c1e704466833ac7543c3eaef",
+      "bodyTextPrefix": "Aureo studio CV Przykład Puste PDF QR Zaloguj Profil Imię i nazw",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Aureo",
+      "hasCanvas": false,
+      "bodyTextLen": 2492,
+      "bodyTextHash": "d71c12fcaf1c8f3df1963418676eb173aaf0cf430eeed37c1335ff1cdee90be7",
+      "bodyTextPrefix": "Aureo PDF QR Zaloguj Podgląd Edycja Skills Web automation toolse",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-built.json",
+  "divergesFromBaseline": true,
+  "baselineReasons": [
+    "desktop: body text replaced (similar length, page start changed)",
+    "mobile: body text replaced (similar length, page start changed)"
+  ]
+}
