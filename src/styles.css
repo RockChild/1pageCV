@@ -20,13 +20,51 @@
   --radius-lg: 16px;
   --radius-xl: 24px;
 }
-
 @media print {
   * { -webkit-print-color-adjust: exact; }
+
+  /* avoid clipping in print */
   .cv-sheet, .cv-main, .cv-sidebar { overflow: visible !important; }
-  .cv-skill { min-height: auto !important; padding: 0px 0 !important; }
-  .cv-dots { height: 1.35em; display: inline-flex; align-items: top; }
+
+  /* let rows size naturally; remove forced heights/padding */
+  .cv-skill {
+    min-height: auto !important;
+    padding: 0 !important;
+    display: grid !important;
+    grid-template-columns: 1fr auto !important;
+    gap: 0.6em !important;
+    align-items: start !important; /* top-align both columns */
+  }
+
+  /* skill name: predictable wrapping and baseline */
+  .cv-skill-name {
+    line-height: 1.35 !important;
+    margin: 0 !important;
+    overflow-wrap: break-word !important;
+  }
+
+  /* dot column pinned to the top; no fixed height */
+  .cv-dots {
+    display: inline-flex !important;
+    align-items: center !important;
+    align-self: start !important;   /* ensures dots start at the same top as text */
+    vertical-align: top !important; /* helps inline layout engines */
+    gap: 0.25em !important;
+    margin-top: 0 !important;
+    height: auto !important;
+  }
+
+  /* scale dots with font so proportions remain consistent */
+  .cv-dot {
+    width: 0.9em !important;
+    height: 0.9em !important;
+    flex: 0 0 auto !important;
+  }
+
+  /* tiny proportional nudge if needed (tweak 0.04em up/down) */
+  /* .cv-dots { margin-top: -0.04em !important; } */
 }
+
 
 @layer base {
   html {
@@ -112,70 +150,49 @@ html, body { line-height: 1.35; }
   line-height: 1.3;
 }
 
-/* Replace .cv-skill flex layout with grid */
+/* Replace current .cv-skill / .cv-dots / .cv-dot rules with this */
+
 .cv-skill {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 10px;
-  align-items: center; /* align to the top of the first line */
-  padding: 6px 0 0 0;
+  align-items: start;        /* <-- top-align both columns */
+  padding: 0;                /* remove top offset that shifts layout */
   font-size: 12px;
-  line-height: 1.35;
+  line-height: 1.35;         /* unitless for consistent scaling */
   color: var(--cv-skill);
-  border-block-color: var(--cv-skill);
   border-radius: 6px;
   border-width: 1px;
+  box-sizing: border-box;
 }
 
-/* Keep the skill name wrapping naturally */
 .cv-skill-name {
   display: block;
   min-width: 0;
   overflow-wrap: break-word;
+  margin: 0;                 /* ensure no extra margins push layout */
+  line-height: 1.35;
 }
 
-/* Dot group stays in the second column and aligns to the top */
+/* Dot column pinned to the top of the row */
 .cv-dots {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
+  gap: 0.25em;
+  align-self: start;         /* <-- ensures dots start at the same top as text */
+  margin-top: 0;             /* keep zero; use em nudges if needed */
 }
 
-/* .cv-skill {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  font-size: 12px;
-  line-height: 1.35;
-  color: var(--cv-skill);
-}
-
-.cv-skill-name {
-  min-width: 0;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.cv-dots {
-  display: flex;
-  gap: 3px;
-  flex-shrink: 0;
-} */
-
+/* Make dot size relative to font */
 .cv-dot {
-  width: 1em;
-  height: 1em;
+  width: 0.9em;
+  height: 0.9em;
   border-radius: 999px;
   background: var(--cv-dot-empty);
+  flex: 0 0 auto;
+  vertical-align: middle;
 }
-/* 
-.cv-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: var(--cv-dot-empty);
-} */
+
 
 .cv-dot.is-on {
   background: var(--cv-gold);
