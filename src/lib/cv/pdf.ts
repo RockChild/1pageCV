@@ -27,19 +27,28 @@ export async function downloadCvPdf(source: HTMLElement, filename: string, opts 
     const DPR = Math.max(window.devicePixelRatio || 1, opts.minDPR || 2);
 
     // 3) Create canvas snapshot
-    const canvas = await html2canvas(clone, {
-      scale: DPR,
-      useCORS: true,
-      allowTaint: false,
-      backgroundColor: "#ffffff",
-      logging: false,
-      width: clone.scrollWidth,
-      height: clone.scrollHeight,
-      windowWidth: clone.scrollWidth,
-      windowHeight: clone.scrollHeight,
-      scrollX: 0,
-      scrollY: 0,
+const canvas = await html2canvas(clone, {
+  scale: DPR,
+  useCORS: true,
+  allowTaint: false,
+  backgroundColor: "#ffffff",
+  logging: false,
+  width: clone.scrollWidth,
+  height: clone.scrollHeight,
+  windowWidth: clone.scrollWidth,
+  windowHeight: clone.scrollHeight,
+  scrollX: 0,
+  scrollY: 0,
+  // This executes transformations safely on the isolated clone node right before rendering
+  onclone: (clonedDoc) => {
+    const textNodes = clonedDoc.querySelectorAll(".cv-skill-name");
+    textNodes.forEach((node) => {
+      // Force a slight upward pixel adjustment to combat text sink glitches
+      (node as HTMLElement).style.transform = "translateY(-1px)";
     });
+  }
+});
+
 
     // Optional debug: append canvas to body so you can visually compare UI vs canvas
     if (opts.debugCanvas) {

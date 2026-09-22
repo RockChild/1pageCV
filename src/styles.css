@@ -27,32 +27,31 @@
   .cv-sheet, .cv-main, .cv-sidebar { overflow: visible !important; }
 
   /* let rows size naturally; remove forced heights/padding */
+  @media print {
+  * { -webkit-print-color-adjust: exact; }
+  .cv-sheet, .cv-main, .cv-sidebar { overflow: visible !important; }
+
   .cv-skill {
     min-height: auto !important;
-    padding: 0 !important;
-    display: grid !important;
-    grid-template-columns: 1fr auto !important;
-    gap: 0.6em !important;
-    align-items: start !important; /* top-align both columns */
+    padding: 4px 8px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
   }
 
-  /* skill name: predictable wrapping and baseline */
   .cv-skill-name {
-    line-height: 1.35 !important;
+    line-height: 1 !important;
     margin: 0 !important;
-    overflow-wrap: break-word !important;
+    font-family: var(--font-cv) !important;
   }
 
-  /* dot column pinned to the top; no fixed height */
   .cv-dots {
     display: inline-flex !important;
     align-items: center !important;
-    align-self: start !important;   /* ensures dots start at the same top as text */
-    vertical-align: top !important; /* helps inline layout engines */
     gap: 0.25em !important;
-    margin-top: 0 !important;
-    height: auto !important;
   }
+}
+
 
   /* scale dots with font so proportions remain consistent */
   .cv-dot {
@@ -96,7 +95,7 @@
 }
 
 * { box-sizing: border-box; }
-html, body { line-height: 1.35; }
+html, body { line-height: 1; }
 
 .cv-sheet {
   --cv-sidebar: #2b3038;
@@ -113,7 +112,7 @@ html, body { line-height: 1.35; }
   min-height: 1123px;
   background: var(--cv-paper);
   color: var(--cv-ink);
-  font-family: "Segoe UI", sans-serif;
+  font-family: sans-serif;
   text-align: left;
   overflow: hidden;
 }
@@ -151,36 +150,37 @@ html, body { line-height: 1.35; }
 }
 
 /* Replace current .cv-skill / .cv-dots / .cv-dot rules with this */
-
 .cv-skill {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 10px;
-  align-items: start;        /* <-- top-align both columns */
-  padding: 0;                /* remove top offset that shifts layout */
+  display: flex;                /* Changed from grid to flex */
+  justify-content: space-between;
+  align-items: center;          /* Centers the items uniformly */
+  padding: 4px 8px;             /* Gives the text internal breathing room inside the border */
   font-size: 12px;
-  line-height: 1.35;         /* unitless for consistent scaling */
+  line-height: 1.2;             /* Safe line height so font letters don't clip */
   color: var(--cv-skill);
   border-radius: 6px;
-  border-width: 1px;
+  border: 1px solid rgba(255, 255, 255, 0.15); /* Re-establishes visual border boxes */
   box-sizing: border-box;
+  width: 100%;
 }
 
 .cv-skill-name {
-  display: block;
+  display: inline-block;        /* Gives html2canvas an absolute visual block baseline */
+  flex: 1;                      /* Takes up all available space up to the dots */
   min-width: 0;
   overflow-wrap: break-word;
-  margin: 0;                 /* ensure no extra margins push layout */
-  line-height: 1.35;
+  margin: 0;                 
+  line-height: 1;
+  font-family: var(--font-cv);  /* Explicitly links your custom font package here */
 }
 
-/* Dot column pinned to the top of the row */
+/* Dot column pinned precisely */
 .cv-dots {
   display: inline-flex;
   align-items: center;
   gap: 0.25em;
-  align-self: start;         /* <-- ensures dots start at the same top as text */
-  margin-top: 0;             /* keep zero; use em nudges if needed */
+  flex-shrink: 0;               /* Prevents canvas scaling from shrinking your dots */
+  margin-top: 0;             
 }
 
 /* Make dot size relative to font */
@@ -214,7 +214,7 @@ html, body { line-height: 1.35; }
   align-items: flex-start;
   gap: 10px;
   font-size: 12px;
-  line-height: 1.35;
+  line-height: 1;
   color: var(--cv-skill);
   word-break: break-word;
 }
