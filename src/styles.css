@@ -21,6 +21,13 @@
   --radius-xl: 24px;
 }
 
+@media print {
+  * { -webkit-print-color-adjust: exact; }
+  .cv-sheet, .cv-main, .cv-sidebar { overflow: visible !important; }
+  .cv-skill { min-height: auto !important; padding: 6px 0 !important; }
+  .cv-dots { height: 1.35em; display: inline-flex; align-items: center; }
+}
+
 @layer base {
   html {
     -webkit-font-smoothing: antialiased;
@@ -49,6 +56,9 @@
     text-wrap: pretty;
   }
 }
+
+* { box-sizing: border-box; }
+html, body { line-height: 1.35; }
 
 .cv-sheet {
   --cv-sidebar: #2b3038;
@@ -107,7 +117,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  min-height: 18px;
+   /* min-height: 18px; */
   font-size: 12px;
   line-height: 1.35;
   color: var(--cv-skill);
@@ -115,7 +125,7 @@
 
 .cv-skill-name {
   min-width: 0;
-  overflow: hidden;
+  /* overflow: hidden; */
   text-overflow: ellipsis;
   white-space: nowrap;
 }
