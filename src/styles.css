@@ -112,12 +112,37 @@ html, body { line-height: 1.35; }
   line-height: 1.3;
 }
 
+/* Replace .cv-skill flex layout with grid */
 .cv-skill {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: start; /* align to the top of the first line */
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--cv-skill);
+}
+
+/* Keep the skill name wrapping naturally */
+.cv-skill-name {
+  display: block;
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+/* Dot group stays in the second column and aligns to the top */
+.cv-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+/* .cv-skill {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-   /* min-height: 18px; */
   font-size: 12px;
   line-height: 1.35;
   color: var(--cv-skill);
@@ -125,7 +150,6 @@ html, body { line-height: 1.35; }
 
 .cv-skill-name {
   min-width: 0;
-  /* overflow: hidden; */
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -134,14 +158,21 @@ html, body { line-height: 1.35; }
   display: flex;
   gap: 3px;
   flex-shrink: 0;
-}
+} */
 
+.cv-dot {
+  width: 0.6em;
+  height: 0.6em;
+  border-radius: 999px;
+  background: var(--cv-dot-empty);
+}
+/* 
 .cv-dot {
   width: 8px;
   height: 8px;
   border-radius: 999px;
   background: var(--cv-dot-empty);
-}
+} */
 
 .cv-dot.is-on {
   background: var(--cv-gold);
