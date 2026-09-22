@@ -24,8 +24,8 @@
 @media print {
   * { -webkit-print-color-adjust: exact; }
   .cv-sheet, .cv-main, .cv-sidebar { overflow: visible !important; }
-  .cv-skill { min-height: auto !important; padding: 6px 0 !important; }
-  .cv-dots { height: 1.35em; display: inline-flex; align-items: center; }
+  .cv-skill { min-height: auto !important; padding: 0px 0 !important; }
+  .cv-dots { height: 1.35em; display: inline-flex; align-items: top; }
 }
 
 @layer base {
@@ -75,7 +75,7 @@ html, body { line-height: 1.35; }
   min-height: 1123px;
   background: var(--cv-paper);
   color: var(--cv-ink);
-  font-family: "Source Sans 3", "Segoe UI", sans-serif;
+  font-family: "Segoe UI", sans-serif;
   text-align: left;
   overflow: hidden;
 }
@@ -117,11 +117,14 @@ html, body { line-height: 1.35; }
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 10px;
-  align-items: start; /* align to the top of the first line */
-  padding: 6px 0;
+  align-items: center; /* align to the top of the first line */
+  padding: 6px 0 0 0;
   font-size: 12px;
   line-height: 1.35;
   color: var(--cv-skill);
+  border-block-color: var(--cv-skill);
+  border-radius: 6px;
+  border-width: 1px;
 }
 
 /* Keep the skill name wrapping naturally */
@@ -161,8 +164,8 @@ html, body { line-height: 1.35; }
 } */
 
 .cv-dot {
-  width: 0.6em;
-  height: 0.6em;
+  width: 1em;
+  height: 1em;
   border-radius: 999px;
   background: var(--cv-dot-empty);
 }
