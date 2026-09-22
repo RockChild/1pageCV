@@ -1,12 +1,14 @@
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 
-export async function downloadCvPdf(source: HTMLElement, filename: string) {
-  // clone and prepare offscreen
+const A4_W_MM = 210;
+const A4_H_MM = 297;
+
+export async function downloadCvPdf(source: HTMLElement, filename: string, opts = { debugCanvas: false, minDPR: 2 }) {
   const clone = source.cloneNode(true) as HTMLElement;
   clone.style.transform = "none";
   clone.style.position = "absolute";
-  clone.style.left = "-9999px"; // offscreen to avoid fixed-top rendering differences
+  clone.style.left = "-9999px";
   clone.style.top = "0";
   clone.style.zIndex = "9999";
   clone.style.margin = "0";
@@ -16,14 +18,15 @@ export async function downloadCvPdf(source: HTMLElement, filename: string) {
   document.body.appendChild(clone);
 
   try {
-    // ensure fonts are loaded so html2canvas uses correct metrics
+    // 1) Wait for fonts to be ready
     if (document.fonts && document.fonts.ready) {
       await document.fonts.ready;
     }
 
-    // use devicePixelRatio for crispness and consistent metrics
-    const DPR = window.devicePixelRatio || 2;
+    // 2) Use devicePixelRatio (or higher) for crisp rendering
+    const DPR = Math.max(window.devicePixelRatio || 1, opts.minDPR || 2);
 
+    // 3) Create canvas snapshot
     const canvas = await html2canvas(clone, {
       scale: DPR,
       useCORS: true,
@@ -38,35 +41,48 @@ export async function downloadCvPdf(source: HTMLElement, filename: string) {
       scrollY: 0,
     });
 
-    // convert to image and create PDF
-    const img = canvas.toDataURL("image/jpeg", 0.95);
+    // Optional debug: append canvas to body so you can visually compare UI vs canvas
+    if (opts.debugCanvas) {
+      canvas.style.position = "fixed";
+      canvas.style.right = "10px";
+      canvas.style.top = "10px";
+      canvas.style.border = "2px solid red";
+      canvas.style.zIndex = "99999";
+      document.body.appendChild(canvas);
+    }
+
+    // 4) Prepare PDF and slicing using integer math
     const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
 
-    // compute image height in mm
-    const A4_W_MM = 210;
-    const A4_H_MM = 297;
-    const imgHmm = (canvas.height * A4_W_MM) / canvas.width;
+    // image height in mm
+    const imgH_mm = (canvas.height * A4_W_MM) / canvas.width;
 
-    // page slicing: use integer px heights to avoid subpixel cuts
+    // page height in px (rounded)
     const pageHeightPx = Math.round((A4_H_MM / A4_W_MM) * canvas.width);
-    let remainingMm = imgHmm;
-    let offsetPx = 0;
-    const pageCanvas = document.createElement("canvas");
-    pageCanvas.width = canvas.width;
 
-    if (imgHmm <= A4_H_MM + 0.5) {
-      pdf.addImage(img, "JPEG", 0, 0, A4_W_MM, imgHmm);
+    // If fits single page, add whole image as PNG (lossless)
+    if (imgH_mm <= A4_H_MM + 0.5) {
+      const imgData = canvas.toDataURL("image/png");
+      pdf.addImage(imgData, "PNG", 0, 0, A4_W_MM, imgH_mm);
     } else {
+      // multi-page slicing
+      const pageCanvas = document.createElement("canvas");
+      pageCanvas.width = canvas.width;
+      let offsetPx = 0;
       let first = true;
-      while (remainingMm > 0.5) {
+
+      while (offsetPx < canvas.height) {
         const sliceHpx = Math.min(pageHeightPx, canvas.height - offsetPx);
         pageCanvas.height = sliceHpx;
+
         const ctx = pageCanvas.getContext("2d");
         if (!ctx) break;
-        ctx.fillStyle = "#ffffff";
-        ctx.fillRect(0, 0, pageCanvas.width, sliceHpx);
 
-        // use rounded offsets to avoid fractional pixel sampling
+        // fill white background to avoid transparency artifacts
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
+
+        // draw using rounded offsets to avoid fractional pixel sampling
         ctx.drawImage(
           canvas,
           0,
@@ -79,14 +95,13 @@ export async function downloadCvPdf(source: HTMLElement, filename: string) {
           Math.round(sliceHpx)
         );
 
-        const slice = pageCanvas.toDataURL("image/jpeg", 0.95);
+        const sliceData = pageCanvas.toDataURL("image/png");
         const sliceMm = (sliceHpx * A4_W_MM) / canvas.width;
 
         if (!first) pdf.addPage();
-        pdf.addImage(slice, "JPEG", 0, 0, A4_W_MM, sliceMm);
+        pdf.addImage(sliceData, "PNG", 0, 0, A4_W_MM, sliceMm);
         first = false;
         offsetPx += sliceHpx;
-        remainingMm -= sliceMm;
       }
     }
 
@@ -96,4 +111,3 @@ export async function downloadCvPdf(source: HTMLElement, filename: string) {
     clone.remove();
   }
 }
-
